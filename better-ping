@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Colors
+
+RED='\e[31m'
+GREEN='\033[92m'
+MAGENTA='\033[95m'
+NC='\033[0m'
+WHITE='\e[97m'
+
+
+# Cleanup function that will output the statistics of the ping command.
+
+cleanup () {
+	sleep 1
+	echo
+	grep -A 3 "ping" $HOME/logs/ping/$fileName | cat
+}
+
+
+# Capture address to ping and echo results.
+
+ip=$1
+
+echo -e $MAGENTA
+echo "Enter a name for the generated log file:"
+read fileName
+
+ping -O $ip | while read -r line; do
+
+	if [[ $line =~ PING ]] ; then
+		echo -e $WHITE------------------------------------------------------------------------
+		echo $line
+		echo -e $NC------------------------------------------------------------------------
+	elif [[ $line =~ ttl ]] ; then
+		echo -e $GREEN$line
+	elif [[ $line =~ ping ]] || [[ $line =~ rtt ]] || [[ $line =~ packet ]] ; then
+		echo -e $WHITE$line
+	else
+		echo -e $RED$line
+
+	fi >> $HOME/logs/ping/$fileName
+
+	tail -1 $HOME/logs/ping/$fileName
+
+	trap cleanup SIGINT
+done
