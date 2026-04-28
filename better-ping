@@ -17,7 +17,7 @@ if
 	[ -d "$logDir" ]; then
 	echo "Found the logs! Feels like Minecraft." > /dev/null
 else
-	mkdir -P $logDir
+	mkdir -p $logDir
 	echo "Log directory created at $logDir."
 fi
 
