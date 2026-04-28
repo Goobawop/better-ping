@@ -13,7 +13,8 @@ WHITE='\e[97m'
 
 logDir=$HOME/logs/ping
 
-if [ -d "$logDir" ]; then
+if 
+	[ -d "$logDir" ]; then
 	echo "Found the logs! Feels like Minecraft." > /dev/null
 else
 	mkdir -P $logDir
@@ -29,14 +30,26 @@ cleanup () {
 }
 
 
-# Capture address to ping and echo results / Define file name.
+# Capture file name and check for duplicates before reading address and pinging host.
 
 ip=$1
+count=""
 
 echo -e $MAGENTA
 echo "Enter a name for the generated log file:"
 read fileName
-outputFile=$(date +%Y-%m-%d_%H:%M_$fileName.txt)
+
+outputFile=$(date +%Y-%m-%d_%H:%M_)$fileName.txt
+dupeCheck=$logDir/$outputFile
+
+if 
+	[ -f "$dupeCheck" ]; then
+	((count++))
+	outputFile=$(date +%Y-%m-%d_%H:%M_)$fileName$count.txt
+else
+	echo "No duplicates found!" > /dev/null
+fi
+
 echo -e $WHITE
 echo "File to be generated: $logDir/$outputFile"
 echo
