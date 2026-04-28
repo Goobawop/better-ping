@@ -9,12 +9,23 @@ NC='\e[0m'
 WHITE='\e[97m'
 
 
+# Check for log directory and create it if it doesn't already exist.
+
+logDir=$HOME/logs/ping
+
+if [ -d "$logDir" ]; then
+	echo "Found the logs! Feels like Minecraft." > /dev/null
+else
+	mkdir -P $logDir
+	echo "Log directory created at $logDir."
+fi
+
 # Cleanup function that will output the statistics of the ping command.
 
 cleanup () {
         sleep 1
         echo
-        grep -A 3 "ping" $HOME/logs/ping/$outputFile
+        grep -A 3 "ping" $logDir/$outputFile
 }
 
 
@@ -27,7 +38,7 @@ echo "Enter a name for the generated log file:"
 read fileName
 outputFile=$(date +%Y-%m-%d_%H:%M_$fileName.txt)
 echo -e $WHITE
-echo "File to be generated: $HOME/logs/ping/$outputFile"
+echo "File to be generated: $logDir/$outputFile"
 echo
 
 
@@ -46,9 +57,9 @@ ping -O $ip | while read -r line; do
         else
                 echo -e $RED$line
 
-        fi >> $HOME/logs/ping/$outputFile
+        fi >> $logDir/$outputFile
 
-        tail -1 $HOME/logs/ping/$outputFile
+        tail -1 $logDir/$outputFile
 
         trap cleanup SIGINT
 done
