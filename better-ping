@@ -14,7 +14,7 @@ WHITE='\e[97m'
 cleanup () {
         sleep 1
         echo
-        grep -A 3 "ping" $HOME/logs/ping/$outputFile | cat
+        grep -A 3 "ping" $HOME/logs/ping/$outputFile
 }
 
 
